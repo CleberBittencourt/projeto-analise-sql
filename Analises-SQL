@@ -1,0 +1,63 @@
+-- =========================================
+-- 1. Faturamento Mensal
+-- =========================================
+SELECT 
+    d.Ano,
+    d.MesNumero,
+    d.MesNome,
+    SUM(f.ValorTotal) AS Faturamento
+FROM FatoVendas f
+JOIN DimData d ON f.DataKey = d.DataKey
+GROUP BY d.Ano, d.MesNumero, d.MesNome
+ORDER BY d.Ano, d.MesNumero;
+
+-- =========================================
+-- 2. Top 10 Produtos Mais Vendidos
+-- =========================================
+SELECT TOP 10
+    p.Nome,
+    SUM(f.Quantidade) AS TotalVendido
+FROM FatoVendas f
+JOIN DimProduto p ON f.ProdutoKey = p.ProdutoKey
+GROUP BY p.Nome
+ORDER BY TotalVendido DESC;
+
+-- =========================================
+-- 3. Top 10 Clientes
+-- =========================================
+SELECT TOP 10
+    c.Nome,
+    SUM(f.ValorTotal) AS TotalGasto
+FROM FatoVendas f
+JOIN DimCliente c ON f.ClienteKey = c.ClienteKey
+GROUP BY c.Nome
+ORDER BY TotalGasto DESC;
+
+-- =========================================
+-- 4. Vendas por Loja
+-- =========================================
+SELECT 
+    l.NomeLoja,
+    SUM(f.ValorTotal) AS Faturamento
+FROM FatoVendas f
+JOIN DimLoja l ON f.LojaKey = l.LojaKey
+GROUP BY l.NomeLoja
+ORDER BY Faturamento DESC;
+
+-- =========================================
+-- 5. Ticket Médio
+-- =========================================
+SELECT 
+    SUM(ValorTotal) / COUNT(DISTINCT PedidoKey) AS TicketMedio
+FROM FatoVendas;
+
+-- =========================================
+-- 6. Crescimento de Vendas (Ano a Ano)
+-- =========================================
+SELECT 
+    d.Ano,
+    SUM(f.ValorTotal) AS Faturamento
+FROM FatoVendas f
+JOIN DimData d ON f.DataKey = d.DataKey
+GROUP BY d.Ano
+ORDER BY d.Ano;
