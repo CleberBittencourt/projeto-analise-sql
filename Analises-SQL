@@ -1,6 +1,6 @@
+
 -- PROJETO: ANÁLISE DE DADOS - VENDAS
 
--- DESCRIÇÃO: Consultas para geração de insights de negócio
 
 -- =====================================================
 -- 1. FATURAMENTO MENSAL
@@ -14,12 +14,9 @@ FROM FatoVendas f
 JOIN DimData d 
     ON f.DataKey = d.DataKey
 GROUP BY 
-    d.Ano, 
-    d.MesNumero, 
-    d.MesNome
+    d.Ano, d.MesNumero, d.MesNome
 ORDER BY 
-    d.Ano, 
-    d.MesNumero;
+    d.Ano, d.MesNumero;
 
 
 -- =====================================================
@@ -33,8 +30,7 @@ FROM FatoVendas f
 JOIN DimProduto p 
     ON f.ProdutoKey = p.ProdutoKey
 GROUP BY 
-    p.ProdutoKey, 
-    p.Nome
+    p.ProdutoKey, p.Nome
 ORDER BY 
     TotalVendido DESC;
 
@@ -50,8 +46,7 @@ FROM FatoVendas f
 JOIN DimCliente c 
     ON f.ClienteKey = c.ClienteKey
 GROUP BY 
-    c.ClienteKey, 
-    c.Nome
+    c.ClienteKey, c.Nome
 ORDER BY 
     TotalGasto DESC;
 
@@ -67,8 +62,7 @@ FROM FatoVendas f
 JOIN DimLoja l 
     ON f.LojaKey = l.LojaKey
 GROUP BY 
-    l.LojaKey, 
-    l.NomeLoja
+    l.LojaKey, l.NomeLoja
 ORDER BY 
     Faturamento DESC;
 
@@ -106,3 +100,19 @@ GROUP BY
     d.Ano
 ORDER BY 
     d.Ano;
+
+
+-- =====================================================
+-- 7. RANKING DE LOJAS POR FATURAMENTO
+-- =====================================================
+SELECT 
+    l.NomeLoja,
+    SUM(f.ValorTotal) AS Faturamento,
+    
+    RANK() OVER (ORDER BY SUM(f.ValorTotal) DESC) AS Ranking
+
+FROM FatoVendas f
+JOIN DimLoja l 
+    ON f.LojaKey = l.LojaKey
+GROUP BY 
+    l.NomeLoja;
