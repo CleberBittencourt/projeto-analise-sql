@@ -1,63 +1,108 @@
--- =========================================
--- 1. Faturamento Mensal
--- =========================================
+-- PROJETO: ANÁLISE DE DADOS - VENDAS
+
+-- DESCRIÇÃO: Consultas para geração de insights de negócio
+
+-- =====================================================
+-- 1. FATURAMENTO MENSAL
+-- =====================================================
 SELECT 
     d.Ano,
     d.MesNumero,
     d.MesNome,
     SUM(f.ValorTotal) AS Faturamento
 FROM FatoVendas f
-JOIN DimData d ON f.DataKey = d.DataKey
-GROUP BY d.Ano, d.MesNumero, d.MesNome
-ORDER BY d.Ano, d.MesNumero;
+JOIN DimData d 
+    ON f.DataKey = d.DataKey
+GROUP BY 
+    d.Ano, 
+    d.MesNumero, 
+    d.MesNome
+ORDER BY 
+    d.Ano, 
+    d.MesNumero;
 
--- =========================================
--- 2. Top 10 Produtos Mais Vendidos
--- =========================================
+
+-- =====================================================
+-- 2. TOP 10 PRODUTOS MAIS VENDIDOS
+-- =====================================================
 SELECT TOP 10
-    p.Nome,
+    p.ProdutoKey,
+    p.Nome AS Produto,
     SUM(f.Quantidade) AS TotalVendido
 FROM FatoVendas f
-JOIN DimProduto p ON f.ProdutoKey = p.ProdutoKey
-GROUP BY p.Nome
-ORDER BY TotalVendido DESC;
+JOIN DimProduto p 
+    ON f.ProdutoKey = p.ProdutoKey
+GROUP BY 
+    p.ProdutoKey, 
+    p.Nome
+ORDER BY 
+    TotalVendido DESC;
 
--- =========================================
--- 3. Top 10 Clientes
--- =========================================
+
+-- =====================================================
+-- 3. TOP 10 CLIENTES (MAIOR FATURAMENTO)
+-- =====================================================
 SELECT TOP 10
-    c.Nome,
+    c.ClienteKey,
+    c.Nome AS Cliente,
     SUM(f.ValorTotal) AS TotalGasto
 FROM FatoVendas f
-JOIN DimCliente c ON f.ClienteKey = c.ClienteKey
-GROUP BY c.Nome
-ORDER BY TotalGasto DESC;
+JOIN DimCliente c 
+    ON f.ClienteKey = c.ClienteKey
+GROUP BY 
+    c.ClienteKey, 
+    c.Nome
+ORDER BY 
+    TotalGasto DESC;
 
--- =========================================
--- 4. Vendas por Loja
--- =========================================
+
+-- =====================================================
+-- 4. FATURAMENTO POR LOJA
+-- =====================================================
 SELECT 
+    l.LojaKey,
     l.NomeLoja,
     SUM(f.ValorTotal) AS Faturamento
 FROM FatoVendas f
-JOIN DimLoja l ON f.LojaKey = l.LojaKey
-GROUP BY l.NomeLoja
-ORDER BY Faturamento DESC;
+JOIN DimLoja l 
+    ON f.LojaKey = l.LojaKey
+GROUP BY 
+    l.LojaKey, 
+    l.NomeLoja
+ORDER BY 
+    Faturamento DESC;
 
--- =========================================
--- 5. Ticket Médio
--- =========================================
+
+-- =====================================================
+-- 5. TICKET MÉDIO
+-- =====================================================
 SELECT 
-    SUM(ValorTotal) / COUNT(DISTINCT PedidoKey) AS TicketMedio
-FROM FatoVendas;
+    CAST(SUM(f.ValorTotal) AS DECIMAL(18,2)) 
+    / COUNT(DISTINCT f.PedidoKey) AS TicketMedio
+FROM FatoVendas f;
 
--- =========================================
--- 6. Crescimento de Vendas (Ano a Ano)
--- =========================================
+
+-- =====================================================
+-- 6. CRESCIMENTO DE VENDAS (ANO A ANO)
+-- =====================================================
 SELECT 
     d.Ano,
-    SUM(f.ValorTotal) AS Faturamento
+    SUM(f.ValorTotal) AS Faturamento,
+
+    LAG(SUM(f.ValorTotal)) OVER (ORDER BY d.Ano) 
+        AS FaturamentoAnoAnterior,
+
+    (
+        SUM(f.ValorTotal) 
+        - LAG(SUM(f.ValorTotal)) OVER (ORDER BY d.Ano)
+    ) * 100.0 
+    / LAG(SUM(f.ValorTotal)) OVER (ORDER BY d.Ano) 
+        AS CrescimentoPercentual
+
 FROM FatoVendas f
-JOIN DimData d ON f.DataKey = d.DataKey
-GROUP BY d.Ano
-ORDER BY d.Ano;
+JOIN DimData d 
+    ON f.DataKey = d.DataKey
+GROUP BY 
+    d.Ano
+ORDER BY 
+    d.Ano;
