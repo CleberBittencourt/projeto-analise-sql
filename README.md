@@ -41,7 +41,7 @@ Foram utilizadas consultas com:
 
 ## Estrutura
 
-* sql/analises.sql → arquivo com todas as consultas utilizadas
+* Analises-SQL → arquivo com todas as consultas utilizadas
 
 ## Integração com outro projeto
 
