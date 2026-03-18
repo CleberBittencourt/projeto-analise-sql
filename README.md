@@ -1,37 +1,57 @@
 # Análise de Dados com SQL - Vendas
 
-Este projeto tem como objetivo realizar análises de dados utilizando SQL, com foco em responder perguntas de negócio a partir de um Data Warehouse de vendas.
+Este projeto foi desenvolvido com o objetivo de analisar dados de vendas utilizando SQL, buscando responder perguntas de negócio de forma prática e direta.
+
+## Objetivo
+
+Aplicar consultas SQL para extrair informações relevantes de um banco de dados estruturado, gerando insights que podem apoiar decisões.
 
 ## Tecnologias utilizadas
 
 * SQL Server
-* Linguagem SQL
+* SQL
 * Git e GitHub
 
-## Objetivo
+## Base de dados
 
-Demonstrar habilidades analíticas utilizando consultas SQL para extração de insights estratégicos.
+Os dados utilizados neste projeto foram previamente organizados em um Data Warehouse, seguindo o modelo estrela.
 
-## Base de Dados
+ Projeto relacionado:
+(coloque aqui o link do seu projeto de Data Warehouse)
 
-Os dados utilizados neste projeto foram modelados previamente em um Data Warehouse no projeto:
+## O que foi analisado
 
-👉 Projeto Data Warehouse - Vendas
+As consultas foram criadas para responder perguntas comuns em um cenário de vendas:
 
-## Análises Realizadas
-
-As principais análises desenvolvidas foram:
-
-* Faturamento mensal
+* Faturamento ao longo do tempo
 * Produtos mais vendidos
-* Clientes com maior volume de compras
+* Clientes que mais compram
 * Desempenho por loja
 * Ticket médio
-* Crescimento de vendas ao longo do tempo
+* Crescimento das vendas
 
-## Estrutura do Projeto
+## Como foi feito
 
-* sql/analises.sql → Contém todas as consultas SQL utilizadas nas análises
+Foram utilizadas consultas com:
+
+* JOIN entre tabelas
+* GROUP BY para agregações
+* SUM e COUNT para cálculos
+* ORDER BY para organização dos resultados
+
+## Estrutura
+
+* sql/analises.sql → arquivo com todas as consultas utilizadas
+
+## Integração com outro projeto
+
+Este projeto complementa o Data Warehouse e o dashboard desenvolvidos anteriormente.
+
+Enquanto lá foi feita a modelagem dos dados e a visualização no Power BI, aqui o foco foi trabalhar diretamente com SQL para explorar os dados.
+
+## Resultado
+
+Com esse projeto, foi possível praticar análise de dados em um cenário mais próximo do mundo real, utilizando SQL para gerar informações úteis a partir dos dados.
 
 ## Autor
 
